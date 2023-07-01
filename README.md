@@ -1,0 +1,1 @@
+Lyte2D website is hosted on github pages from the root of this repository.
