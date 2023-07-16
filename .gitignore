@@ -1,0 +1,4 @@
+# these are used during build/testing
+docs_test/
+data/
+wasm/

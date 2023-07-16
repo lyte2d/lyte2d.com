@@ -1,3 +1,875 @@
-Current site: <a href="https://simple-bits.com/lyte">lyte2d</a>
-<br>(New site is a work in progress.)
+<!-- Generated. Do not edit manually! -->
+<!DOCTYPE html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta charset="UTF-8" /><title>[Lyte2D] Home</title><link rel="icon" type="image/png" href="public/icon.png" /><link rel="stylesheet" href="public/prism.min.css" /><link rel="stylesheet" href="public/style.css" /><script src="public/prism.min.js"></script><script src="public/prism-lua.min.js"></script><script src="public/prism-typescript.min.js"></script></head><body><header id="top"><section style="padding-bottom: 10px; flex-direction: column" class="container textcenter"><a class="item" style="padding-top:10px; padding-left:10px;" href="index.html#top"><span class="logo">Lyte2D</span></a><div style="padding-top:10px;" class="item textcenter"><a href="index.html#about" class="menulink">About</a><span>| </span><a href="index.html#examples" class="menulink">Examples</a><span>| </span><a href="index.html#guide" class="menulink">User guide</a><span>| </span><a href="index.html#api" class="menulink">API</a></div><div class="item1"> </div></section><a style="position:fixed; top: 25px; right: 20px;" href="index.html#top"><img height="25px" src="public/icon.png" /></a></header><main><section id="about" class="sections"><div class="title">About</div><p> Lyte2D is a simple, lightweigth, free and opensource Lua framework for writing games. </p><p> Lyte2D is inspired by LOVE2D.</p><p> Hello world in Lyte2D: </p><pre><code id="example-1" class="language-lua" style="background-color:inherit">function lyte.tick()
+    lyte.draw_text("Hello, world", 0, 0)
+end
+</code></pre><script> Prism.highlightElement(document.getElementById("example-1")); </script><p>Lyte2D is small (Windows and Linux binaries are each less than 2 MB zipped) and supports HTML5 by compiling into WASM.</p><p style="color: brown;">                Lyte2D is currently "alpha" software.
+                Unless you know what you're doing, you probably shouldn't use it in "production."
+                But if you have some programming experience, especially with Lua you should be fine.
+                As such, it's ready to use for experimentation and "jam" style games.
+            </p><p>Lyte2D works on Windows, Linux (including SteamDeck) and HTML5.</p><b>Downloads</b><ul><li>Binaries<a target="_blank" class="menulinkext" href="https://github.com/morew4rd/lyte2d/releases">https://github.com/morew4rd/lyte2d/releases⧉</a></li><li>Source snapshot<a target="_blank" class="menulinkext" href="https://github.com/morew4rd/lyte2d">https://github.com/morew4rd/lyte2d⧉</a></li></ul><p>Once you download the binary zip, just put lyte.exe somewhere in your path (or in a local directory where you'll write your game.)</p><b>Some jam games made with Lyte2D</b><ul><li><b>Pong Out</b> is on<a target="_blank" class="menulinkext" href="https://m04r.itch.io/pong-out">https://m04r.itch.io/pong-out⧉</a> where you can play on your browser, download a binary or just download the sources</li></ul></section><section id="examples" class="sections"><div class="title">Examples</div><p>Note: Both canvas and code areas are resizable. You can also open the canvas area in a full browser tab.</p><div class="dropdown"><div><button id="dropdownMenuButton" class="dropdown-toggle" onclick="toggleDropdownMenu()" type="button">Examples ▼</button><span id="examplename"></span><a id="examplenewlink" class="menulink" href="" target="_blank"></a></div><ul id="examplesdropdown" class="dropdown-menu"><li><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 'empty')"><div style="display: none;"></div>(None)</a></li><li id="s01_hello"><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 's01_hello')"><div style="display: none;">-- lyte sample
 
+-- load an image
+local image_1 = lyte.load_image("assets/hero.png")
+
+
+function lyte.tick(dt, width, height)
+    -- background color
+    lyte.cls(0, 0, 0, 1)
+
+    -- foreground color for the rectangles, red with alpha
+    lyte.set_color(1, 0, 0, 0.3)
+
+    -- draw 4 filled overlapping rectangles
+    for i=1,4 do
+        local x = i * width/7
+        local y = i * height/7
+        lyte.draw_rect(x, y, width/3, height/3)
+    end
+
+    -- foreground color for the circles, green with alpha
+    lyte.set_color(0, 1, 0, 0.3)
+    -- draw 4 filled overlapping circles
+    for i=1,4 do
+        local x = width - ((i+1) * width/7)
+        local y = i * height/7
+        lyte.draw_circle(x, y, (width+height)/6)
+    end
+
+
+    lyte.set_color(1,1,0,1)
+
+    lyte.draw_circle_line(width/2, height/2, (width+height)/4);
+
+    lyte.reset_color() -- sets color to: (1, 1, 1, 1)
+    -- draw the text on the top
+    lyte.draw_text("Hello, Lyte2D", 4, 4)
+
+    -- draw the image
+    lyte.draw_image(image_1, 10, 50)
+
+    -- draw the image, scaled
+    lyte.push_matrix()
+    lyte.scale(2, 2)
+
+    -- full image
+    lyte.draw_image(image_1, 10, 70)
+    -- a portion of the image (sprite's ticks are 16x16. draw #3)
+    lyte.draw_image_rect(image_1, 10, 90, 16*(3-1), 0, 16, 16)
+
+    lyte.pop_matrix()
+end
+
+
+</div>s01_hello</a></li><li id="s02_movement"><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 's02_movement')"><div style="display: none;">-- lyte sample
+
+local total_time = 0
+local SCALE = 3
+
+-- image_1
+local image_1 = lyte.load_image("assets/hero.png")
+local sprite_1_tick = 2
+local sprite_1_numticks = 5
+
+
+function lyte.tick(dt, width, height)
+    -- UPDATE
+
+    -- dt is the time (in seconds) from last tick to now
+    -- keep track of total time
+    total_time = total_time + dt
+
+    -- control the sprite tick draw with space or left mouse button
+    if lyte.is_key_pressed("space") or lyte.is_mouse_pressed("mb1") then
+        sprite_1_tick = (sprite_1_tick + 1) % sprite_1_numticks
+    end
+
+    -- scaled down width/height
+    local W = width/SCALE
+    local H = height/SCALE
+
+    -- x position will change based on time
+    local x_pos = W/2-16/2 + math.sin(total_time)*W/3
+    -- y position middle of the screen (even when window is resized)
+    local y_pos = H/2-16/2
+
+    -- DRAW
+    lyte.cls(0.2, 0.1, 0.1, 1)
+    lyte.push_matrix()
+    lyte.scale(SCALE, SCALE)
+
+    lyte.draw_image_rect(image_1, x_pos, y_pos, 16*(sprite_1_tick), 0, 16, 16)
+
+    lyte.pop_matrix()
+
+    -- background with a "pulsating" alpha
+    lyte.set_color(1,1,1, math.abs(math.sin(total_time/2)))
+
+    lyte.draw_text("SPACE or LMB: change sprite tick", 10, height-40)
+
+end
+</div>s02_movement</a></li><li id="s03_music"><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 's03_music')"><div style="display: none;">-- lyte sample
+
+local total_time = 0
+
+-- music
+local music_1 = lyte.load_music("assets/elev.mp3")
+
+-- start playing right away
+music_1:play()
+
+function lyte.tick(dt, width, height)
+    -- UPDATE
+    total_time = total_time + dt
+
+    -- up/down keys to change the pitch
+    if lyte.is_key_pressed("up") then
+        music_1.pitch = (music_1.pitch + 0.01)
+    elseif lyte.is_key_pressed("down") then
+        music_1.pitch = (music_1.pitch - 0.01)
+    end
+    -- left/right keys to change the pan
+    if lyte.is_key_pressed("left") then
+        music_1.pan = math.min(music_1.pan + 0.1, 1)
+    elseif lyte.is_key_pressed("right") then
+        music_1.pan = math.max(music_1.pan - 0.1, 0)
+    end
+    -- rmb start/pause music
+    if lyte.is_mouse_pressed("mb2") then
+        if music_1.playing then
+            music_1:pause()
+        else
+            music_1:play()
+        end
+    end
+
+    -- DRAW
+    lyte.cls(0.0, 0.1, 0.2, 1)
+    lyte.draw_text(("played: %1.2f/%3.1f secs"):format(music_1.length_played, music_1.length), 10, 10)
+    lyte.draw_text(("pitch: %1.2f, pan: %1.2f "):format(music_1.pitch, music_1.pan), 10, 30)
+    lyte.set_color(1,1,0.2,1)
+    lyte.draw_text("(browser? LMB to enable sound)", 10, height/2-20)
+    lyte.reset_color()
+    lyte.draw_text("RMB to start/pause music", 10, height/2)
+    -- background with a "pulsating" alpha
+    lyte.set_color(0.8,0.9,0.8, math.abs(math.sin(total_time/2))+0.3)
+    lyte.draw_text("Up/Down: change pitch", 10, height-40-20)
+    lyte.set_color(0.9,0.8,0.8, math.abs(math.cos(total_time/2))+0.3)
+    lyte.draw_text("Left/Right: change pan", 10, height-40)
+end
+</div>s03_music</a></li><li id="s04_soundfx"><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 's04_soundfx')"><div style="display: none;">-- lyte sample
+
+local sfx_hurt = lyte.load_sound("assets/sfx_hurt.wav")
+local sfx_shoot = lyte.load_sound("assets/sfx_shoot.ogg")
+
+-- sound fx: playable instances
+-- 3 'hurt' instances
+local sfx_hurt_1 = lyte.clone_sound(sfx_hurt)
+local sfx_hurt_2 = lyte.clone_sound(sfx_hurt)
+local sfx_hurt_3 = lyte.clone_sound(sfx_hurt)
+-- 2 'shoot' instances
+local sfx_shoot_1 = lyte.clone_sound(sfx_shoot)
+local sfx_shoot_2 = lyte.clone_sound(sfx_shoot)
+
+-- pans on both sides and middle
+sfx_hurt_1.pan = 1.0
+sfx_hurt_2.pan = 0.5
+sfx_hurt_3.pan = 0.0
+-- pans on both sides
+sfx_shoot_1.pan = 1.0
+sfx_shoot_2.pan = 0.0
+
+function lyte.tick(dt, width, height)
+    -- UPDATE
+
+    -- lmb/rmb for shooting sounds
+    if lyte.is_mouse_pressed("mb1") then
+        sfx_shoot_1:play()
+    end
+    if lyte.is_mouse_pressed("mb2") then
+        sfx_shoot_2:play()
+    end
+    -- keys 1/2/3 for hurting sounds
+    if lyte.is_key_pressed("1") then
+        sfx_hurt_1:play()
+    end
+    if lyte.is_key_pressed("2") then
+        sfx_hurt_2:play()
+    end
+    if lyte.is_key_pressed("3") then
+        sfx_hurt_3:play()
+    end
+
+    -- DRAW
+    lyte.cls(0.0, 0.15, 0.05, 1)
+    lyte.draw_text("Sounds FX", 10, 10)
+    lyte.draw_text("LMB/RMB for 'shooting'", 10, 60)
+    lyte.draw_text("1/2/3 for 'hurting'", 10, 80)
+
+    lyte.set_color(1, 1, 0, 1)
+    lyte.draw_text("(on browser, sounds can be delayed)", 5, 120)
+end
+</div>s04_soundfx</a></li><li id="s05_canvas"><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 's05_canvas')"><div style="display: none;">-- lyte sample
+
+local total_time = 0
+
+-- create a canvas
+local canvas_1 = lyte.new_canvas(220,220)
+print(lyte.is_image_canvas(canvas_1))
+
+-- helper function to randomly fill the canvas
+local function fill_canvas_random()
+    lyte.set_canvas(canvas_1)
+    lyte.cls(0, 0, 0, 1)
+    for i=1,1000 do
+        lyte.set_color(math.random(), math.random(), math.random(), math.random())
+        lyte.draw_rect(math.random(1,220), math.random(1,220), math.random(5,100), math.random(5,100))
+    end
+    lyte.set_color(1,1,0,1)
+    lyte.draw_text("HELLO HAHA", 10, 10)
+    lyte.reset_canvas()
+end
+
+-- helper function to cls the canvas
+local function cls_canvas()
+    lyte.set_canvas(canvas_1)
+    lyte.cls(0, 0, 0, 1)
+    lyte.reset_canvas()
+end
+
+-- setup the initial canvas drawing
+cls_canvas()
+fill_canvas_random()
+
+function lyte.tick(dt, width, height)
+    -- UPDATE
+    total_time = total_time + dt
+
+    if lyte.is_mouse_pressed("mb1") then
+        fill_canvas_random()
+    end
+    if lyte.is_mouse_pressed("mb2") then
+        cls_canvas()
+    end
+
+    -- DRAW
+    lyte.cls(0.2, 0.05, 0.2, 1)
+    lyte.push_matrix()
+    -- draw canvas' image, rotating in te middle
+    lyte.rotate_at(total_time, width/2, height/2)
+
+    -- draw the current image. note: when canvas is GC'd, image goes with it
+    -- so make sure to keep a reference to canvas itself, even if you won't update it
+    lyte.draw_image(canvas_1, width/2 - canvas_1.width/2, height/2 - canvas_1.height/2)
+
+    lyte.pop_matrix()
+
+    lyte.reset_color()
+    lyte.draw_text("LMB to re-generate canvas image", 10, height-40-20)
+    lyte.draw_text("RMB to cls canvas image", 10, height-40)
+end
+</div>s05_canvas</a></li><li id="s06_basic_shader"><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 's06_basic_shader')"><div style="display: none;">-- lyte sample
+
+local total_time = 0
+
+-- creating a shader program. single argument is a dictionary
+-- which defines the shader.
+-- (as of alpha) currently all values need to be passed.
+local shader_1 = lyte.new_shader({
+    -- uniforms and their types must be defined beforehand. accepted types:
+    -- float, vec2, vec3, vec4, mat4, int, ivec2, ivec3, ivec4 and sampler2D
+    -- Note: do not declare these inside glsl code. they will be automatically
+    --       added to the proper location.
+    -- by default, two uniforms are passed and can be used in both shaders:
+    -- uniform vec4  current_color --> the value set with lyte.set_color call
+    -- uniform sampler2D current_image --> image set wit lyte.draw_image call
+    uniforms = {
+        screen_size = "vec2",
+    },
+    -- code for vertex shader. this will be default in a future release
+    -- vert_main function must be defined. gl_Position must be set
+    -- image_uv name is shared between vertex -> fragment shaders
+    -- other can be added by the dev
+    vert = [[
+        // draw rect sends x, y positions and w/h, 4 floats
+        in vec4 coords;
+        out vec2 image_uv;
+        void vert_main() {
+            gl_Position = vec4(coords.xy, 0.0, 1.0);
+            image_uv = coords.zw;
+        }
+    ]],
+    -- code for fragment shader.
+    -- frag_main function must be defined.
+    -- must output a vec4 value representing rgba
+    -- image_uv name is shared between vertex -> fragment shaders
+    frag = [[
+        in vec2 image_uv;
+        out vec4 frag_color;
+        void frag_main() {
+            // default fragment shader looks something like the following
+            //frag_color = texture(current_image, image_uv) * current_color;
+            // we'll set blue to depend on the screen X of the pixel
+            frag_color.b = gl_FragCoord.x / screen_size.x;
+            // and red will depend on the texture X and Y of the pixel
+            frag_color.r = image_uv.x * image_uv.y * 2.0;
+            // and green to be the reverse of blue
+            frag_color.g = (1.0 - frag_color.b);
+            frag_color.a = 0.9;
+
+        }
+    ]]
+})
+
+
+local function draw_some_rects(x,y)
+    -- draw some rectangles on different
+    lyte.draw_rect(x+10, y, 60, 20)
+    lyte.draw_rect(x+80, y, 60, 20)
+    lyte.draw_rect(x+150, y, 60, 20)
+    lyte.draw_rect(x+220, y, 60, 20)
+end
+
+
+function lyte.tick(dt, width, height)
+    -- UPDATE
+    total_time = total_time + dt
+
+    -- shader_1:set({ screen_size = {width, height} })
+    shader_1:set("screen_size", {width, height})
+    -- lyte.set_shader_uniform(shader_1,  "screen_size", {width, height})
+    -- DRAW
+    lyte.cls(0, 0, 0, 1)
+    lyte.reset_color()
+
+    lyte.set_shader(shader_1)
+
+    lyte.draw_rect(10, 10, width-20, 40)
+
+    draw_some_rects(10, 60)
+    draw_some_rects(30, 90)
+    draw_some_rects(60, 120)
+
+    lyte.push_matrix()
+    lyte.rotate_at(total_time/2, width/2, height/2)
+    lyte.draw_rect(width/2-height/3, height/2-25, height*2/3, 50)
+    lyte.pop_matrix()
+
+    lyte.reset_shader()
+end
+</div>s06_basic_shader</a></li><li id="s07_basic_shader2"><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 's07_basic_shader2')"><div style="display: none;">-- lyte sample
+
+local total_time = 0
+
+local img_1 = lyte.load_image("assets/hero.png")
+local img_2 = lyte.load_image("assets/char02.png")
+local img_3 = lyte.load_image("assets/char03.png")
+
+local shader_1 = lyte.new_shader({
+    uniforms = {
+        screen_size = "vec2",
+        my_img = "sampler2D",
+        transparent_mode = "float",
+    },
+    vert = [[
+        in vec4 coords;
+        out vec2 image_uv;
+        void vert_main() {
+            gl_Position = vec4(coords.xy, 0.0, 1.0);
+            image_uv = coords.zw;
+        }
+    ]],
+    frag = [[
+        in vec2 image_uv;
+        out vec4 frag_color;
+        void frag_main() {
+            if (transparent_mode == 0.0) {
+                // current color, but override alpha with 1.0
+                frag_color = texture(my_img, image_uv) * vec4((current_color.rgb), 1.0) ;
+            } else {
+                // add some "washed" transparency by using alpha and the location on screen
+                frag_color = texture(my_img, image_uv) * current_color * (2.5*gl_FragCoord.x/screen_size.x);
+            }
+            if (frag_color.a < 0.01) {
+                // don't even
+                discard;
+            }
+
+        }
+    ]]
+})
+
+
+local function draw_some_rects(x,y)
+    -- draw some rectangles on different
+    lyte.draw_rect(x+10, y, 60, 20)
+    lyte.draw_rect(x+80, y, 60, 20)
+    lyte.draw_rect(x+150, y, 60, 20)
+    lyte.draw_rect(x+220, y, 60, 20)
+end
+
+
+function lyte.tick(dt, width, height)
+    -- UPDATE
+    total_time = total_time + dt
+
+    shader_1:set("transparent_mode", 0)
+    shader_1:set("screen_size", {width, height})
+
+    if lyte.is_key_down("space") or lyte.is_mouse_down("mb1") then
+        shader_1:set("transparent_mode", 1 )
+    end
+
+    -- DRAW
+    lyte.cls(0, 0, 0, 1)
+
+    -- transparent gray color
+    lyte.set_color(1,1,1,0.4)
+    lyte.set_shader(shader_1)
+
+    shader_1:set("my_img", img_1)
+
+    lyte.draw_rect(10, 10, width-20, 40)
+
+    shader_1:set("my_img", img_2)
+
+    draw_some_rects(10, 60)
+
+    shader_1:set("my_img", img_3 )
+
+    draw_some_rects(30, 90)
+
+    shader_1:set("my_img", img_1 )
+
+    draw_some_rects(60, 120)
+
+    lyte.push_matrix()
+    lyte.rotate_at(total_time/2, width/2, height/2)
+    lyte.draw_rect(width/2-height*4/9, height/2-25, height*8/9, 50)
+    lyte.pop_matrix()
+
+    lyte.reset_shader()
+
+    lyte.reset_color()
+    lyte.draw_text("Hold Space/LMB for 'transparent'", 10, height-30)
+end
+</div>s07_basic_shader2</a></li><li id="s08_shader_spinning_plus"><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 's08_shader_spinning_plus')"><div style="display: none;">-- lyte sample
+
+local state = {totaltime = 0}
+
+local shader1 = lyte.new_shader({
+    uniforms = {
+        time = "float",
+        screensize = "vec2"
+    },
+    vert = [[
+        in vec4 coord;
+        out vec2 image_uv;
+        void vert_main() {
+            gl_Position = vec4(coord.xy, 0.0, 1.0);
+            image_uv = coord.wz;
+        }
+    ]],
+    frag = [[
+        // ported from a Love2D shader called
+        // "spinning_plus"
+
+        #define PI 3.14159265359
+
+        mat2 rotate2d(float _angle) {
+            return mat2(cos(_angle),-sin(_angle), sin(_angle),cos(_angle));
+        }
+
+        float box(in vec2 _st, in vec2 _size) {
+            _size = vec2(0.5) - _size*0.5;
+            vec2 uv = smoothstep(_size, _size+vec2(0.001), _st);
+            uv *= smoothstep(_size, _size+vec2(0.001), vec2(1.0)-_st);
+            return uv.x*uv.y;
+        }
+
+        float xcross(in vec2 _st, float _size) {
+            return  box(_st, vec2(_size,_size/4.)) + box(_st, vec2(_size/4.,_size));
+        }
+
+
+        in vec2 image_uv;
+        out vec4 frag_color;
+        void frag_main() {
+            vec2 st = gl_FragCoord.xy/screensize.xy;
+            vec3 color2 = vec3(0.0);
+
+            // move space from the center to the vec2(0.0)
+            st -= vec2(0.5);
+            // rotate the space
+            st = rotate2d( sin(time)*PI ) * st;
+            // move it back to the original place
+            st += vec2(0.5);
+
+            // Show the coordinates of the space on the background
+            color2 = vec3(st.x,st.y,0.0);
+
+            // Add the shape on the foreground
+            color2 += vec3(xcross(st,0.4));
+            frag_color = vec4(color2, 1.0);
+
+        }
+    ]]})
+
+function lyte.tick(dt, width, height, resized)
+  state.totaltime = (state.totaltime + dt)
+  lyte.cls(0, 0, 0, 1)
+  -- send should be after cls (current limitation)
+  shader1:set("time", state.totaltime)
+  shader1:set("screensize", {width, height})
+  lyte.set_shader(shader1)
+  lyte.set_color(1, 1, 1, 1)
+  lyte.draw_rect(10, 10, (width - 20), (height - 50))
+  lyte.reset_shader()
+  lyte.draw_text("hello from lyte2d. shaders are cool.", 5, (height - 40))
+end
+</div>s08_shader_spinning_plus</a></li><li id="s09_shader_canvas"><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 's09_shader_canvas')"><div style="display: none;">-- lyte sample
+
+local state = {totaltime = 0}
+
+local shader1 = lyte.new_shader({
+    uniforms = {
+        time = "float",
+        screensize = "vec2"
+    },
+    vert = [[
+        in vec4 coord;
+        out vec2 image_uv;
+        void vert_main() {
+            gl_Position = vec4(coord.xy, 0.0, 1.0);
+            image_uv = coord.wz;
+        }
+    ]],
+    frag = [[
+        // ported from a Love2D shader called
+        // "spinning_plus"
+
+        #define PI 3.14159265359
+
+        mat2 rotate2d(float _angle) {
+            return mat2(cos(_angle),-sin(_angle), sin(_angle),cos(_angle));
+        }
+
+        float box(in vec2 _st, in vec2 _size) {
+            _size = vec2(0.5) - _size*0.5;
+            vec2 uv = smoothstep(_size, _size+vec2(0.001), _st);
+            uv *= smoothstep(_size, _size+vec2(0.001), vec2(1.0)-_st);
+            return uv.x*uv.y;
+        }
+
+        float xcross(in vec2 _st, float _size) {
+            return  box(_st, vec2(_size,_size/4.)) + box(_st, vec2(_size/4.,_size));
+        }
+
+
+        in vec2 image_uv;
+        out vec4 frag_color;
+        void frag_main() {
+            vec2 st = gl_FragCoord.xy/screensize.xy;
+            vec3 color2 = vec3(0.0);
+
+            // move space from the center to the vec2(0.0)
+            st -= vec2(0.5);
+            // rotate the space
+            st = rotate2d( sin(time)*PI ) * st;
+            // move it back to the original place
+            st += vec2(0.5);
+
+            // Show the coordinates of the space on the background
+            color2 = vec3(st.x,st.y,0.0);
+
+            // Add the shape on the foreground
+            color2 += vec3(xcross(st,0.4));
+            frag_color = vec4(color2, 1.0);
+
+        }
+    ]]
+})
+
+local canvas = lyte.new_canvas(120,120)
+
+lyte.set_window_minsize(400, 300)
+
+function lyte.tick(dt, width, height, resized)
+  state.totaltime = (state.totaltime + dt)
+
+  local mx = lyte.get_mouse_x()
+  local my = lyte.get_mouse_y()
+
+  -- draw on the canvas with the shader
+  lyte.set_canvas(canvas)
+  lyte.cls(0, 0, 0, 1)
+  -- send should be after cls (a current limitation)
+--   shader1:set({ time = state.totaltime, screensize = {canvas.width, canvas.height} })
+  shader1:set("time", state.totaltime)
+  shader1:set("screensize", {canvas.width, canvas.height})
+  lyte.set_shader(shader1)
+  lyte.set_color(1, 1, 1, 1)
+  lyte.draw_rect(10, 10, (canvas.width - 20), (canvas.height - 20))
+  lyte.reset_shader()
+  lyte.reset_canvas()
+
+
+  -- draw the canvas image on the screen
+  lyte.cls(0, 0, 0, 1)
+  lyte.push_matrix()
+  lyte.translate(mx, my)
+  lyte.rotate(-state.totaltime)
+  lyte.draw_image(canvas, -canvas.width/2, -canvas.height/2)
+  lyte.pop_matrix()
+
+  lyte.draw_text("lyte2d shader inside canvas. move mouse.", 5, (height - 40))
+end
+</div>s09_shader_canvas</a></li></ul></div><div class="resizer ugly"><iframe id="demosiframe" class="resized lyte-iframe" title="demos" name="demos"></iframe></div><div class="resizer2 ugly"><div class="resized source-area"><pre><code id="examplecode" class="language-lua"></code></pre></div></div></section><section id="guide" class="sections"><div class="title">User guide</div><p></p><b>Get started</b><p>Download the executable and place it somewhere in your path. 'lyte.exe' (or 'lyte' on linux) is assumed to be in your path.</p><ul><li>Create an <code>app.lua</code> file.</li><li>Implement <code>lyte.tick</code> function.  (See examples) </li><li>Make sure you're in the same directory in your shell/cmd window</li><li>Start your game with <code>lyte</code>.</li></ul><b>Want to run some code in another location?</b><ul><li>If you want to use another directory as the base, you can do <code>lyte dir=../my_games/testgame</code> </li><li>If you want to use another file as your 'main' file, you can do <code>lyte app=myapp</code>, assuming you have 'myapp.lua' in the current directory. You should NOT specify the extension</li><li><code>dir=...</code> and <code>app=...</code> arguments can be combined to run a file in an arbitrary directory</li></ul><b>Package your game once you're ready.</b><ul><li>Ready to share your game with others? Cool!</li><li>Create an 'app.zip' file. Inside the zip, 'app.lua' should be at the root/topmost location</li><li>Copy 'lyte.exe', and rename it to 'mygame.exe' (swap 'mygame' for your chosen binary name)</li><li>Alternatively, consider using 'lyte_gui.exe' on Windows, for no-console launch</li><li>Running <code>mygame</code> will automatically load app.zip if it's in the same directory.</li><li>Option 1: you can share the exe and the zip file, and your players can play it as it is</li><li>Option 2: Fuse your app (next section.)</li></ul><b>App 'fusing'</b><ul><li>Lyte2D support LOVE2D style app fusing. Basically you merge the exe and the zip files into a single binary that will contain everything needed to run your code.</li><li>On linux you can do <code>cat lyte.exe app.zip > mygame.exe</code>. Then just distribute 'mygame.exe' however you'd like.</li><li>Similar on Windows. (...to be documented, in the meantime see LOVE2D docs.)</li></ul><b>Configuring your app.</b><ul><li>If you'd like to configure your window size, fullscreen, etc. before the app loads, you can create a 'config.lua' file next to your 'app.lua'. Here's an example config.lua file: </li><pre><code id="cfg-1" class="language-lua" style="background-color:inherit">return {
+    window_width = 800,
+    window_height = 500,
+    window_title = "my game",
+    fulscreen = false,
+    window_vsync = true,
+    default_filtermode = "nearest", -- linear
+    default_blendmode = "blend",
+  }
+</code></pre><script> Prism.highlightElement(document.getElementById("cfg-1")); </script><li>Note: you need to keep this file next to the zip or exe file if you fuse your app</li></ul><b>HTML5 -- browser games!</b><ul><li>Lyte2D has WASM builds! Just put your `app.zip` file next to the HTML5 files. (lyte.html, lyte.js, lyte.wasm).</li><li>Rename 'lyte.html' to suit your needs. And put all four files up on a static host (itch.io, github pages, etc.)</li></ul><b>'Advanced' features</b><ul><li>You can get to a REPL to inspect/edit your game real time. Start with <code>lyte repl=lua</code>.</li><li>In REPL mode, you can stop the game anytime, inspect/change global variables, and do whatever before continuing the game.</li><li>On Windows just typing a letter will pause the game. And you can start using lyte as a Lua REPL.</li><li>Similar on Linux, however the key is not captured. So after the first key (any key), you can type the commands.</li><li>Hit enter on an empty line to unpause the game loop.</li></ul><b>Known issues with alpha</b><ul><li>Functions do not have default arguments, so all arguments must be passed to each function. This will be fixed in a later release.</li><li>Line/Circle drawing can have minor issues with very small sizes.</li><li>Font rendering can have minor issues</li><li>Browser version has rendering problems with pixels. Desktop versions look much better</li><li>Browser version has issues, especially delays, with audio rendering. Desktop versions are much better</li><li>Firefox has some issues with some shader features, while Edge/Chrome work fine</li><li>There could be lurking bugs in native code (alpha software.)</li><li>REPL does not provide code-completions yet (although the machinery is there.)</li><li>Missing features (coming up in later releases): physics, networking, native UI etc.</li></ul></section><section id="api" class="sections"><div class="title">API</div><p>Note: some of the experimental APIs are not documented.</p><div class="api-scroller"><pre><code id="code-api" class="language-typescript" style="background-color:inherit">declare namespace lyte {
+    // functions
+    function tick(delta_time: number, window_width: number, window_height: number, window_resized: boolean): void
+    function quit(): void
+    function cls(r: number, g: number, b: number, a: number): void
+    function set_color(r: number, g: number, b: number, a: number): void
+    function reset_color(): void
+    function draw_point(x: number, y: number): void
+    function draw_line(x1: number, y1: number, x2: number, y2: number): void
+    function draw_rect(dest_x: number, dest_y: number, rect_width: number, rect_height: number): void
+    function draw_rect_line(dest_x: number, dest_y: number, rect_width: number, rect_height: number): void
+    function draw_circle(dest_x: number, dest_y: number, radius: number): void
+    function draw_circle_line(dest_x: number, dest_y: number, radius: number): void
+    function load_image(image_path: string): Image
+    function draw_image(image: Image, dest_x: number, dest_y: number): void
+    function draw_image_rect(image: Image, dest_x: number, dest_y: number, src_x: number, src_y: number, rect_width: number, rect_height: number): void
+    function get_image_width(image: Image): number
+    function get_image_height(image: Image): number
+    function new_canvas(width: number, height: number): Image
+    function set_canvas(canvas_image: Image): void
+    function reset_canvas(): void
+    function is_image_canvas(image: Image): boolean
+    function load_font(font_path: string, size: number): Font
+    function set_font(font: Font): void
+    function reset_font(): void
+    function draw_text(text: string, dest_x: number, dest_y: number): void
+    function get_text_width(text: string): number
+    function get_text_height(text: string): number
+    function get_monitor_count(): number
+    function get_monitor_name(index: number): string
+    function get_monitor_width(index: number): number
+    function get_monitor_height(index: number): number
+    function set_window_monitor(index: number): void
+    function set_window_resizable(resizable: boolean): void
+    function set_window_minsize(width: number, height: number): void
+    function set_window_size(width: number, height: number): void
+    function get_window_width(): number
+    function get_window_height(): number
+    function set_window_position(x: number, y: number): void
+    function set_fullscreen(fullscreen: boolean): void
+    function is_fullscreen(): boolean
+    function set_window_title(title: string): void
+    function set_window_vsync(vsync: boolean): void
+    function is_window_vsync(): boolean
+    function set_window_icon_file(icon_path: string): void
+    function set_window_margins(left: number, right: number, top: number, bottom: number): void
+    function set_window_paddings(left: number, right: number, top: number, bottom: number): void
+    function is_key_down(key: KeyboardKey): boolean
+    function is_key_pressed(key: KeyboardKey): boolean
+    function is_key_released(key: KeyboardKey): boolean
+    function is_key_repeat(key: KeyboardKey): boolean
+    function is_mouse_down(mouse_button: MouseButton): boolean
+    function is_mouse_pressed(mouse_button: MouseButton): boolean
+    function is_mouse_released(mouse_button: MouseButton): boolean
+    function get_mouse_x(): number
+    function get_mouse_y(): number
+    function get_gamepad_count(): number
+    function get_gamepad_name(index: number): string
+    function is_gamepad_down(index: number, gamepad_button: GamepadButton): boolean
+    function is_gamepad_pressed(index: number, gamepad_button: GamepadButton): boolean
+    function is_gamepad_released(index: number, gamepad_button: GamepadButton): boolean
+    function get_gamepad_axis(index: number, gamepad_axis: GamepadAxis): number
+    function set_mastervolume(mastervolume: number): void
+    function get_mastervolume(): number
+    function load_music(music_path: string): Music
+    function play_music(music: Music): void
+    function pause_music(music: Music): void
+    function resume_music(music: Music): void
+    function stop_music(music: Music): void
+    function is_music_playing(music: Music): boolean
+    function get_music_length(music: Music): number
+    function get_music_length_played(music: Music): number
+    function seek_music(music: Music, secs: number): void
+    function set_music_volume(music: Music, volume: number): void
+    function set_music_pan(music: Music, pan: number): void
+    function set_music_pitch(music: Music, pitch: number): void
+    function get_music_volume(music: Music): number
+    function get_music_pan(music: Music): number
+    function get_music_pitch(music: Music): number
+    function load_sound(sound_path: string): Sound
+    function clone_sound(orig: Sound): Sound
+    function play_sound(sound: Sound): void
+    function pause_sound(sound: Sound): void
+    function resume_sound(sound: Sound): void
+    function stop_sound(sound: Sound): void
+    function is_sound_playing(sound: Sound): boolean
+    function set_sound_volume(sound: Sound, volume: number): void
+    function set_sound_pan(sound: Sound, pan: number): void
+    function set_sound_pitch(sound: Sound, pitch: number): void
+    function get_sound_volume(sound: Sound): number
+    function get_sound_pan(sound: Sound): number
+    function get_sound_pitch(sound: Sound): number
+    function load_textfile(file_path: string): string
+    function save_textfile(file_path: string, data: string): void
+    function save_textfile_append(file_path: string, data: string): void
+    function push_matrix(): void
+    function pop_matrix(): void
+    function reset_matrix(): void
+    function translate(delta_x: number, delta_y: number): void
+    function rotate(angle: number): void
+    function rotate_at(angle: number, x: number, y: number): void
+    function scale(scale_x: number, scale_y: number): void
+    function scale_at(scale_x: number, scale_y: number, x: number, y: number): void
+    function set_default_blendmode(blendmode: BlendMode): void
+    function set_blendmode(blendmode: BlendMode): void
+    function reset_blendmode(): void
+    function set_default_filtermode(filtermode: FilterMode): void
+    function set_filtermode(filtermode: FilterMode): void
+    function reset_filtermode(): void
+    function new_shader(shaderdef: ShaderDef): Shader
+    function set_shader(shader: Shader): void
+    function reset_shader(): void
+    function set_shader_uniform(shader: Shader, uniform_name: string, uniform_value: ShaderUniformValue): void
+    function reset_shader_uniform(shader: Shader, uniform_name: string): void
+    function new_shaderbuilder(): ShaderBuilder
+    function shaderbuilder_uniform(shaderbuilder: ShaderBuilder, uniform_name: string, uniform_type: UniformType): void
+    function shaderbuilder_vertex(shaderbuilder: ShaderBuilder, vertex_code: string): void
+    function shaderbuilder_fragment(shaderbuilder: ShaderBuilder, fragment_code: string): void
+    function shaderbuilder_build(shaderbuilder: ShaderBuilder): Shader
+    function set_physics_engine(state: PhysicsState): void
+    // lists
+    // tuples
+    type FloatVec4 = number[]
+    // dicts
+    type UniformNamesToTypes = {[key: string]: UniformType}
+    // variants
+    type ShaderUniformValue = number | FloatVec4 | Image
+    // records
+    type Image = {
+        width: number
+        height: number
+        is_canvas: boolean
+    }
+    type Font = {
+    }
+    type Music = {
+        playing: boolean
+        length: number
+        length_played: number
+        pan: number
+        pitch: number
+        volume: number
+        play: (music: Music) => void
+        pause: (music: Music) => void
+        resume: (music: Music) => void
+        stop: (music: Music) => void
+        seek: (music: Music, secs: number) => void
+    }
+    type Sound = {
+        pan: number
+        pitch: number
+        volume: number
+        clone: (orig: Sound) => Sound
+        pause: (sound: Sound) => void
+        play: (sound: Sound) => void
+        resume: (sound: Sound) => void
+        stop: (sound: Sound) => void
+    }
+    type Shader = {
+        set: (shader: Shader, uniform_name: string, uniform_value: ShaderUniformValue) => void
+        reset: (shader: Shader, uniform_name: string) => void
+    }
+    type ShaderDef = {
+        frag: string
+        vert: string
+        uniforms: UniformNamesToTypes
+    }
+    type ShaderBuilder = {
+        uniform: (shaderbuilder: ShaderBuilder, uniform_name: string, uniform_type: UniformType) => void
+        vertex: (shaderbuilder: ShaderBuilder, vertex_code: string) => void
+        fragment: (shaderbuilder: ShaderBuilder, fragment_code: string) => void
+        build: (shaderbuilder: ShaderBuilder) => Shader
+    }
+    // enums
+    type UniformType = 
+        "_invalid" | "float" | "vec2" | "vec3" | "vec4" | "int" | "ivec2" | "ivec3" | "ivec4" | "mat4" |
+        "sampler2D" 
+    type BlendMode = 
+        "none" | "blend" | "add" | "mod" | "mul" 
+    type FilterMode = 
+        "_invalid" | "nearest" | "linear" 
+    type GamepadAxis = 
+        "left_x" | "left_y" | "right_x" | "right_y" | "left_trigger" | "right_trigger" 
+    type GamepadButton = 
+        "pad_a" | "pad_b" | "pad_x" | "pad_y" | "left_bumper" | "right_bumper" | "back" | "start" | "guide" |
+        "left_thumb" | "right_thumb" | "dpad_up" | "dpad_right" | "dpad_down" | "dpad_left" 
+    type MouseButton = 
+        "mb1" | "mb2" | "mb3" | "mb4" | "mb5" | "mb6" | "mb7" | "mb8" 
+    type KeyboardKey = 
+        "space" | "'" | "," | "-" | "." | "/" | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" |
+        "9" | ";" | "=" | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" |
+        "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" | "[" | "\\" | "]" |
+        "`" | "world_1" | "world_2" | "escape" | "enter" | "tab" | "backspace" | "insert" | "delete" |
+        "right" | "left" | "down" | "up" | "page_up" | "page_down" | "home" | "end" | "caps_lock" | "scroll_lock" |
+        "num_lock" | "print_screen" | "pause" | "f1" | "f2" | "f3" | "f4" | "f5" | "f6" | "f7" | "f8" |
+        "f9" | "f10" | "f11" | "f12" | "f13" | "f14" | "f15" | "f16" | "f17" | "f18" | "f19" | "f20" |
+        "f21" | "f22" | "f23" | "f24" | "f25" | "kp_0" | "kp_1" | "kp_2" | "kp_3" | "kp_4" | "kp_5" |
+        "kp_6" | "kp_7" | "kp_8" | "kp_9" | "kp_decimal" | "kp_divide" | "kp_multiply" | "kp_subtract" |
+        "kp_add" | "kp_enter" | "kp_equal" | "left_shift" | "left_control" | "left_alt" | "left_super" |
+        "right_shift" | "right_control" | "right_alt" | "right_super" | "menu" 
+    type PhysicsState = 
+        "off" | "on" | "paused" 
+    }
+</code></pre><script> Prism.highlightElement(document.getElementById("code-api")); </script></div></section><script>            function toggleDropdownMenu() {
+                let dropdownMenu = document.querySelector(".dropdown-menu");
+                if (dropdownMenu.style.display === "block") {
+                  dropdownMenu.style.display = "none";
+                } else {
+                  dropdownMenu.style.display = "block";
+                }
+              }
+
+              function closeDropdownMenu() {
+                let dropdownMenu = document.querySelector(".dropdown-menu");
+                dropdownMenu.style.display = "none";
+              }
+
+              function on_examplelink_click(ev, app) {
+                ev.preventDefault();
+
+                let el_iframe = document.getElementById('demosiframe');
+                el_iframe.setAttribute("src", app === "empty" ? "" : "lyte.html?zip=examples.zip&app=" + app);
+
+                closeDropdownMenu();
+
+                let el_code = document.getElementById("examplecode");
+                el_code.innerHTML = ev.target.children[0].innerText;
+                Prism.highlightElement(el_code);
+
+                document.getElementById("examplename").innerText = app === "empty" ? "" : " " + app + " ";
+                let el_newlink = document.getElementById("examplenewlink");
+                el_newlink.innerText = app === "empty" ? "" : "Open in new tab";
+                el_newlink.setAttribute("href", "lyte.html?zip=examples.zip&app=" + app);
+              }
+
+        </script></main><footer><div class="textcenter">(c) moreward<a target="_blank" class="menulinkext" href="https://morew4rd.com">web⧉</a><a target="_blank" class="menulinkext" href="https://twitter.com/morew4rd">twitter⧉</a><a target="_blank" class="menulinkext" href="https://github.com/morew4rd">github⧉</a><a target="_blank" class="menulinkext" href="https://morew4rd.itcH.io">itch.io⧉</a></div></footer></body><script src="https://www.googletagmanager.com/gtag/js?id=G-ZCQ9FCCMV2"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-ZCQ9FCCMV2');
+</script></html>
