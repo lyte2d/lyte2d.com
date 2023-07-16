@@ -751,7 +751,6 @@ end
     function shaderbuilder_vertex(shaderbuilder: ShaderBuilder, vertex_code: string): void
     function shaderbuilder_fragment(shaderbuilder: ShaderBuilder, fragment_code: string): void
     function shaderbuilder_build(shaderbuilder: ShaderBuilder): Shader
-    function set_physics_engine(state: PhysicsState): void
     // lists
     // tuples
     type FloatVec4 = number[]
@@ -832,8 +831,6 @@ end
         "kp_6" | "kp_7" | "kp_8" | "kp_9" | "kp_decimal" | "kp_divide" | "kp_multiply" | "kp_subtract" |
         "kp_add" | "kp_enter" | "kp_equal" | "left_shift" | "left_control" | "left_alt" | "left_super" |
         "right_shift" | "right_control" | "right_alt" | "right_super" | "menu" 
-    type PhysicsState = 
-        "off" | "on" | "paused" 
     }
 </code></pre><script> Prism.highlightElement(document.getElementById("code-api")); </script></div></section><script>            function toggleDropdownMenu() {
                 let dropdownMenu = document.querySelector(".dropdown-menu");
