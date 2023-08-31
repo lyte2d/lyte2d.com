@@ -47,7 +47,7 @@ local function Page()
     return Layout( "Home",
         Section ("about",
             H.div{class="title", "About"},
-            H.p [[ Lyte2D is a simple, lightweigth, free and opensource Lua framework for writing games. ]],
+            H.p [[ Lyte2D is a simple, lightweight, free and opensource Lua framework for writing games. ]],
             H.p [[ Lyte2D is inspired by LOVE2D.]],
             H.p [[ Hello world in Lyte2D: ]],
             Code ({id="example-1", style="background-color:inherit"}, simple1),
