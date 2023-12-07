@@ -26,7 +26,7 @@ Data.examples = {
 do
     for k, v in pairs(Data.examples) do
         if k ~= "empty" then
-            local file = io.open("../data/examples/" .. v.app .. ".lua", "r")
+            local file = io.open("../data/samples/" .. v.app .. ".lua", "r")
             v.src = file:read("*a")
             file:close()
         end
