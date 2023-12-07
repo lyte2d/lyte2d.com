@@ -1,6 +1,10 @@
-# Copy WASM files from the lyte2d repo
+if [ -n "$1" ]; then
+    LYTEBINDIR=$1
+else
+    LYTEBINDIR=../lytedev/out/rel/bin/
+fi
 
-LYTEBINDIR=/mnt/c/work/lyte/lytedev/out/rel/bin/
+mkdir -p wasm
 
 cp $LYTEBINDIR/lyte.html ./wasm/
 cp $LYTEBINDIR/lyte.js ./wasm/

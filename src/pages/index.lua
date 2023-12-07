@@ -16,7 +16,7 @@ return {
     window_width = 800,
     window_height = 500,
     window_title = "my game",
-    fulscreen = false,
+    fullscreen = false,
     window_vsync = true,
     default_filtermode = "nearest", -- linear
     default_blendmode = "blend",
@@ -62,8 +62,8 @@ local function Page()
             H.p "Lyte2D works on Windows, Linux (including SteamDeck) and HTML5.",
             H.b "Downloads",
             H.ul {
-                H.li {"Binaries", MenuLinkExt("https://github.com/morew4rd/lyte2d/releases","https://github.com/morew4rd/lyte2d/releases")},
-                H.li {"Source snapshot", MenuLinkExt("https://github.com/morew4rd/lyte2d", "https://github.com/morew4rd/lyte2d")},
+                H.li {"Binaries", MenuLinkExt("https://github.com/lyte2d/lyte2d/releases","https://github.com/lyte2d/lyte2d/releases")},
+                H.li {"Source snapshot", MenuLinkExt("https://github.com/lyte2d/lyte2d", "https://github.com/lyte2d/lyte2d")},
             },
             H.p "Once you download the binary zip, just put lyte.exe somewhere in your path (or in a local directory where you'll write your game.)",
             H.b "Some jam games made with Lyte2D",
