@@ -21,6 +21,7 @@ Data.examples = {
     { title = "Shader with samplers", app =  "s07_basic_shader2", },
     { title = "Shader spin (ported from Love2D)", app =  "s08_shader_spinning_plus", },
     { title = "Shader + canvas", app =  "s09_shader_canvas", },
+    { title = "ImageBatch", app =  "s10_imagebatch", },
 }
 
 do

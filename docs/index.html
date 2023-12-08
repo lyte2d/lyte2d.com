@@ -56,6 +56,12 @@ function lyte.tick(dt, width, height)
     -- a portion of the image (sprite's ticks are 16x16. draw #3)
     lyte.draw_image_rect(image_1, 10, 90, 16*(3-1), 0, 16, 16)
 
+    -- 0.7.4: new drawing primitives
+    lyte.draw_line(10,10,100,100)
+    lyte.draw_point(102,102)
+    lyte.draw_triangle(150,150,154,200, 220,200)
+    lyte.draw_triangle_line(150,50,154,100, 220,100)
+
     lyte.pop_matrix()
 end
 
@@ -623,7 +629,44 @@ function lyte.tick(dt, width, height, resized)
 
   lyte.draw_text("lyte2d shader inside canvas. move mouse.", 5, (height - 40))
 end
-</div>s09_shader_canvas</a></li></ul></div><div class="resizer ugly"><iframe id="demosiframe" class="resized lyte-iframe" title="demos" name="demos"></iframe></div><div class="resizer2 ugly"><div class="resized source-area"><pre><code id="examplecode" class="language-lua"></code></pre></div></div></section><section id="guide" class="sections"><div class="title">User guide</div><p></p><b>Get started</b><p>Download the executable and place it somewhere in your path. 'lyte.exe' (or 'lyte' on linux) is assumed to be in your path.</p><ul><li>Create an <code>app.lua</code> file.</li><li>Implement <code>lyte.tick</code> function.  (See examples) </li><li>Make sure you're in the same directory in your shell/cmd window</li><li>Start your game with <code>lyte</code>.</li></ul><b>Want to run some code in another location?</b><ul><li>If you want to use another directory as the base, you can do <code>lyte dir=../my_games/testgame</code> </li><li>If you want to use another file as your 'main' file, you can do <code>lyte app=myapp</code>, assuming you have 'myapp.lua' in the current directory. You should NOT specify the extension</li><li><code>dir=...</code> and <code>app=...</code> arguments can be combined to run a file in an arbitrary directory</li></ul><b>Package your game once you're ready.</b><ul><li>Ready to share your game with others? Cool!</li><li>Create an 'app.zip' file. Inside the zip, 'app.lua' should be at the root/topmost location</li><li>Copy 'lyte.exe', and rename it to 'mygame.exe' (swap 'mygame' for your chosen binary name)</li><li>Alternatively, consider using 'lyte_gui.exe' on Windows, for no-console launch</li><li>Running <code>mygame</code> will automatically load app.zip if it's in the same directory.</li><li>Option 1: you can share the exe and the zip file, and your players can play it as it is</li><li>Option 2: Fuse your app (next section.)</li></ul><b>App 'fusing'</b><ul><li>Lyte2D support LOVE2D style app fusing. Basically you merge the exe and the zip files into a single binary that will contain everything needed to run your code.</li><li>On linux you can do <code>cat lyte.exe app.zip > mygame.exe</code>. Then just distribute 'mygame.exe' however you'd like.</li><li>Similar on Windows. (...to be documented, in the meantime see LOVE2D docs.)</li></ul><b>Configuring your app.</b><ul><li>If you'd like to configure your window size, fullscreen, etc. before the app loads, you can create a 'config.lua' file next to your 'app.lua'. Here's an example config.lua file: </li><pre><code id="cfg-1" class="language-lua" style="background-color:inherit">return {
+</div>s09_shader_canvas</a></li><li id="s10_imagebatch"><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 's10_imagebatch')"><div style="display: none;">-- lyte.ImageBatch sample
+
+local img = lyte.load_image("assets/batch.png")
+
+local batch = lyte.new_imagebatch(img);
+
+local N = 100
+
+local function add_items()
+    for i=1,N do
+        local x = math.random(10, 600) -- location of the destination rectangle
+        local y = math.random(10, 400)
+        local sz = math.random(8,128) -- size of the destination rectangle
+        local r = math.random(1,4) -- one of the 4 sprites will be added
+        if r == 1 then
+            -- dest_x, y, width, height,  source_x, y, width, height
+            batch:add_rect(x, y, sz, sz, 0, 0, 32, 32 )
+        elseif r == 2 then
+            batch:add_rect(x, y, sz, sz, 32, 0, 32, 32 )
+        elseif r == 3 then
+            batch:add_rect(x, y, sz, sz, 0, 32, 32, 32 )
+        else
+            batch:add_rect(x, y, sz, sz, 32, 32, 32, 32 )
+        end
+
+    end
+end
+
+add_items()
+
+function lyte.tick()
+    lyte.cls(0,0,0,1)
+    if lyte.is_key_down("enter") or lyte.is_mouse_down("mb1") then
+        batch:reset()
+        add_items()
+    end
+    batch:draw()
+end</div>s10_imagebatch</a></li></ul></div><div class="resizer ugly"><iframe id="demosiframe" class="resized lyte-iframe" title="demos" name="demos"></iframe></div><div class="resizer2 ugly"><div class="resized source-area"><pre><code id="examplecode" class="language-lua"></code></pre></div></div></section><section id="guide" class="sections"><div class="title">User guide</div><p></p><b>Get started</b><p>Download the executable and place it somewhere in your path. 'lyte.exe' (or 'lyte' on linux) is assumed to be in your path.</p><ul><li>Create an <code>app.lua</code> file.</li><li>Implement <code>lyte.tick</code> function.  (See examples) </li><li>Make sure you're in the same directory in your shell/cmd window</li><li>Start your game with <code>lyte</code>.</li></ul><b>Want to run some code in another location?</b><ul><li>If you want to use another directory as the base, you can do <code>lyte dir=../my_games/testgame</code> </li><li>If you want to use another file as your 'main' file, you can do <code>lyte app=myapp</code>, assuming you have 'myapp.lua' in the current directory. You should NOT specify the extension</li><li><code>dir=...</code> and <code>app=...</code> arguments can be combined to run a file in an arbitrary directory</li></ul><b>Package your game once you're ready.</b><ul><li>Ready to share your game with others? Cool!</li><li>Create an 'app.zip' file. Inside the zip, 'app.lua' should be at the root/topmost location</li><li>Copy 'lyte.exe', and rename it to 'mygame.exe' (swap 'mygame' for your chosen binary name)</li><li>Alternatively, consider using 'lyte_gui.exe' on Windows, for no-console launch</li><li>Running <code>mygame</code> will automatically load app.zip if it's in the same directory.</li><li>Option 1: you can share the exe and the zip file, and your players can play it as it is</li><li>Option 2: Fuse your app (next section.)</li></ul><b>App 'fusing'</b><ul><li>Lyte2D support LOVE2D style app fusing. Basically you merge the exe and the zip files into a single binary that will contain everything needed to run your code.</li><li>On linux you can do <code>cat lyte.exe app.zip > mygame.exe</code>. Then just distribute 'mygame.exe' however you'd like.</li><li>Similar on Windows. (...to be documented, in the meantime see LOVE2D docs.)</li></ul><b>Configuring your app.</b><ul><li>If you'd like to configure your window size, fullscreen, etc. before the app loads, you can create a 'config.lua' file next to your 'app.lua'. Here's an example config.lua file: </li><pre><code id="cfg-1" class="language-lua" style="background-color:inherit">return {
     window_width = 800,
     window_height = 500,
     window_title = "my game",
@@ -641,6 +684,8 @@ end
     function reset_color(): void
     function draw_point(x: number, y: number): void
     function draw_line(x1: number, y1: number, x2: number, y2: number): void
+    function draw_triangle(ax: number, ay: number, bx: number, by: number, cx: number, cy: number): void
+    function draw_triangle_line(ax: number, ay: number, bx: number, by: number, cx: number, cy: number): void
     function draw_rect(dest_x: number, dest_y: number, rect_width: number, rect_height: number): void
     function draw_rect_line(dest_x: number, dest_y: number, rect_width: number, rect_height: number): void
     function draw_circle(dest_x: number, dest_y: number, radius: number): void
@@ -654,6 +699,11 @@ end
     function set_canvas(canvas_image: Image): void
     function reset_canvas(): void
     function is_image_canvas(image: Image): boolean
+    function new_imagebatch(image: Image): ImageBatch
+    function reset_imagebatch(imagebatch: ImageBatch): void
+    function add_imagebatch_rect(imagebatch: ImageBatch, dest_x: number, dest_y: number, dest_width: number, dest_height: number, src_x: number, src_y: number, src_width: number, src_height: number): void
+    function get_imagebatch_rect_count(imagebatch: ImageBatch): number
+    function draw_imagebatch(imagebatch: ImageBatch): void
     function load_font(font_path: string, size: number): Font
     function set_font(font: Font): void
     function reset_font(): void
@@ -763,6 +813,12 @@ end
         width: number
         height: number
         is_canvas: boolean
+    }
+    type ImageBatch = {
+        rect_count: number
+        add_rect: (imagebatch: ImageBatch, dest_x: number, dest_y: number, dest_width: number, dest_height: number, src_x: number, src_y: number, src_width: number, src_height: number) => void
+        draw: (imagebatch: ImageBatch) => void
+        reset: (imagebatch: ImageBatch) => void
     }
     type Font = {
     }
