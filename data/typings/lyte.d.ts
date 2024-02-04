@@ -37,10 +37,10 @@ declare namespace lyte {
     function cleanup_image(image: lyte.Image): void
     // Load the image specified in the path. 
     function load_image(image_path: string): lyte.Image
-    // Draw an image. 
-    function draw_image(image: lyte.Image, dest_x: number, dest_y: number): void
-    // Draw a rectangular area from the image. 
-    function draw_image_rect(image: lyte.Image, dest_x: number, dest_y: number, src_x: number, src_y: number, rect_width: number, rect_height: number): void
+    // Draw an image. Angle, scale and origin values are all optional. 
+    function draw_image(image: lyte.Image, dest_x: number, dest_y: number, angle: number, origin_x: number, origin_y: number, scale_x: number, scale_y: number): void
+    // Draw a rectangular area from the image. Angle, scale and origin values are all optional. 
+    function draw_image_rect(image: lyte.Image, dest_x: number, dest_y: number, src_x: number, src_y: number, rect_width: number, rect_height: number, angle: number, origin_x: number, origin_y: number, scale_x: number, scale_y: number): void
     // Get the width of the image. 
     function get_image_width(image: lyte.Image): number
     // Get the height of the image. 
@@ -59,7 +59,7 @@ declare namespace lyte {
     function new_imagebatch(image: lyte.Image): lyte.ImageBatch
     // Reset the image batch, remove all added rects. 
     function reset_imagebatch(imagebatch: lyte.ImageBatch): void
-    // Add a recta to the image batch (from it's initial image). 
+    // Add a recta to the image batch (from it's initial image). `src_width` and `src_height` are optional and will default to the corresponding `dest_` values. 
     function add_imagebatch_rect(imagebatch: lyte.ImageBatch, dest_x: number, dest_y: number, dest_width: number, dest_height: number, src_x: number, src_y: number, src_width: number, src_height: number): void
     // Get the number of rects in the image batch. 
     function get_imagebatch_rect_count(imagebatch: lyte.ImageBatch): number
@@ -125,6 +125,10 @@ declare namespace lyte {
     function is_key_released(key: lyte.KeyboardKey): boolean
     // Check if the given key is repeated. 
     function is_key_repeat(key: lyte.KeyboardKey): boolean
+    // Get the list of pressed keys. 
+    function get_pressed_keys(): lyte.KeyList
+    // Get all keyboard text input from last frame. Output is utf8 encoded. 
+    function get_textinput(): string
     // Check if the given mouse button is down. 
     function is_mouse_down(mouse_button: lyte.MouseButton): boolean
     // Check if the given mouse button is pressed. 
@@ -419,6 +423,8 @@ declare namespace lyte {
         | "mb6"
         | "mb7"
         | "mb8"
+        | "scrollup"
+        | "scrolldown"
     // Acceptable keyboardkey values.
     type KeyboardKey =
           "space"
