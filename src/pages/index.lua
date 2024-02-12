@@ -71,6 +71,9 @@ local function Page()
                 H.li {
                     H.b "Pong Out", " is on", MenuLinkExt("https://m04r.itch.io/pong-out","https://m04r.itch.io/pong-out"), " where you can play on your browser, download a binary or just download the sources",
                 },
+                H.li {
+                    H.b "Omua War", " is on", MenuLinkExt("https://m04r.itch.io/omua-war","https://m04r.itch.io/omua-war"), " where you can play on your browser",
+                },
                 -- H.li {H.b "Snek Head", "- TBD"},
             },
         ""),
