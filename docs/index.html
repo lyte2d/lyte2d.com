@@ -672,7 +672,84 @@ function lyte.tick()
         add_items()
     end
     batch:draw()
-end</div>s10_imagebatch</a></li></ul></div><div class="resizer ugly"><iframe id="demosiframe" class="resized lyte-iframe" title="demos" name="demos"></iframe></div><div class="resizer2 ugly"><div class="resized source-area"><pre><code id="examplecode" class="language-lua"></code></pre></div></div></section><section id="guide" class="sections"><div class="title">User guide</div><p></p><b>Get started</b><p>Download the executable and place it somewhere in your path. 'lyte.exe' (or 'lyte' on linux) is assumed to be in your path.</p><ul><li>Create an <code>app.lua</code> file.</li><li>Implement <code>lyte.tick</code> function.  (See examples) </li><li>Make sure you're in the same directory in your shell/cmd window</li><li>Start your game with <code>lyte</code>.</li></ul><b>Want to run some code in another location?</b><ul><li>If you want to use another directory as the base, you can do <code>lyte dir=../my_games/testgame</code> </li><li>If you want to use another file as your 'main' file, you can do <code>lyte app=myapp</code>, assuming you have 'myapp.lua' in the current directory. You should NOT specify the extension</li><li><code>dir=...</code> and <code>app=...</code> arguments can be combined to run a file in an arbitrary directory</li></ul><b>Package your game once you're ready.</b><ul><li>Ready to share your game with others? Cool!</li><li>Create an 'app.zip' file. Inside the zip, 'app.lua' should be at the root/topmost location</li><li>Copy 'lyte.exe', and rename it to 'mygame.exe' (swap 'mygame' for your chosen binary name)</li><li>Alternatively, consider using 'lyte_gui.exe' on Windows, for no-console launch</li><li>Running <code>mygame</code> will automatically load app.zip if it's in the same directory.</li><li>Option 1: you can share the exe and the zip file, and your players can play it as it is</li><li>Option 2: Fuse your app (next section.)</li></ul><b>App 'fusing'</b><ul><li>Lyte2D support LOVE2D style app fusing. Basically you merge the exe and the zip files into a single binary that will contain everything needed to run your code.</li><li>On linux you can do <code>cat lyte.exe app.zip > mygame.exe</code>. Then just distribute 'mygame.exe' however you'd like.</li><li>Similar on Windows. (...to be documented, in the meantime see LOVE2D docs.)</li></ul><b>Configuring your app.</b><ul><li>If you'd like to configure your window size, fullscreen, etc. before the app loads, you can create a 'config.lua' file next to your 'app.lua'. Here's an example config.lua file: </li><pre><code id="cfg-1" class="language-lua" style="background-color:inherit">return {
+end</div>s10_imagebatch</a></li><li id="s11_physics"><a target="none" class="menulink" href="about:blank" onclick="on_examplelink_click(event, 's11_physics')"><div style="display: none;">-- simple physics world
+local world = lyte.new_world()
+
+-- colliders are stored in these tables
+local circles = {}
+local rects = {}
+
+-- create some random circle colliders
+for i=1,45 do
+    local x = math.random(0, 800)
+    local y = math.random(0, 600)
+    local r = math.random(10,30)
+    circles[i] = world:new_circle_collider(r, x, y, 0);
+    circles[i].hit = false
+end
+
+-- create some random rectangle colliders
+for i=1,45 do
+    local x = math.random(0, 800)
+    local y = math.random(0, 600)
+    local w = math.random(15,25)
+    local h = math.random(25,40)
+    local rot = math.random()*math.pi*2
+    rects[i] = world:new_rect_collider(w, h, x, y, rot)
+    rects[i].hit = false
+end
+
+
+local function refresh_objects(dt)
+    for i=1,#circles do
+        circles[i]:refresh()
+        circles[i].hit = false
+        if(circles[i]:get_collision_count() > 0) then circles[i].hit = true end
+    end
+    for i=1,#rects do
+        rects[i]:refresh()
+        rects[i].hit = false
+        if(rects[i]:get_collision_count() > 0) then rects[i].hit = true end
+    end
+end
+
+refresh_objects(0) -- initial coords
+
+function lyte.tick(dt)
+    world:update(dt)
+
+    lyte.cls(0.2,0.2,0.2,1)
+
+    for i=1,#circles do
+        local c = circles[i]
+        lyte.set_color(0.8,0.8,0.8,1)
+        lyte.draw_circle_line(c.x, c.y, c.radius)
+        if c.hit then
+            lyte.set_color(0.8,0.4,0.0,0.3)
+            lyte.draw_circle(c.x, c.y, c.radius)
+        end
+    end
+
+    for i=1,#rects do
+        local r = rects[i]
+        lyte.push_matrix()
+        lyte.translate(r.x, r.y)
+        lyte.rotate(r.angle)
+        lyte.translate(-r.width/2, -r.height/2)
+        lyte.set_color(0.8,0.8,0.8,1)
+        lyte.draw_rect_line(0, 0, r.width, r.height)
+        if r.hit then
+            lyte.set_color(0.8,0.4,0.0,0.3)
+            lyte.draw_rect(0, 0, r.width, r.height)
+        end
+        lyte.pop_matrix();
+    end
+
+    lyte.set_color(0.8,0.8,0.8,1)
+    lyte.draw_text("HELLO!", 10, 10);
+    refresh_objects(dt)
+end
+</div>s11_physics</a></li></ul></div><div class="resizer ugly"><iframe id="demosiframe" class="resized lyte-iframe" title="demos" name="demos"></iframe></div><div class="resizer2 ugly"><div class="resized source-area"><pre><code id="examplecode" class="language-lua"></code></pre></div></div></section><section id="guide" class="sections"><div class="title">User guide</div><p></p><b>Get started</b><p>Download the executable and place it somewhere in your path. 'lyte.exe' (or 'lyte' on linux) is assumed to be in your path.</p><ul><li>Create an <code>app.lua</code> file.</li><li>Implement <code>lyte.tick</code> function.  (See examples) </li><li>Make sure you're in the same directory in your shell/cmd window</li><li>Start your game with <code>lyte</code>.</li></ul><b>Want to run some code in another location?</b><ul><li>If you want to use another directory as the base, you can do <code>lyte dir=../my_games/testgame</code> </li><li>If you want to use another file as your 'main' file, you can do <code>lyte app=myapp</code>, assuming you have 'myapp.lua' in the current directory. You should NOT specify the extension</li><li><code>dir=...</code> and <code>app=...</code> arguments can be combined to run a file in an arbitrary directory</li></ul><b>Package your game once you're ready.</b><ul><li>Ready to share your game with others? Cool!</li><li>Create an 'app.zip' file. Inside the zip, 'app.lua' should be at the root/topmost location</li><li>Copy 'lyte.exe', and rename it to 'mygame.exe' (swap 'mygame' for your chosen binary name)</li><li>Alternatively, consider using 'lyte_gui.exe' on Windows, for no-console launch</li><li>Running <code>mygame</code> will automatically load app.zip if it's in the same directory.</li><li>Option 1: you can share the exe and the zip file, and your players can play it as it is</li><li>Option 2: Fuse your app (next section.)</li></ul><b>App 'fusing'</b><ul><li>Lyte2D support LOVE2D style app fusing. Basically you merge the exe and the zip files into a single binary that will contain everything needed to run your code.</li><li>On linux you can do <code>cat lyte.exe app.zip > mygame.exe</code>. Then just distribute 'mygame.exe' however you'd like.</li><li>Similar on Windows. (...to be documented, in the meantime see LOVE2D docs.)</li></ul><b>Configuring your app.</b><ul><li>If you'd like to configure your window size, fullscreen, etc. before the app loads, you can create a 'config.lua' file next to your 'app.lua'. Here's an example config.lua file: </li><pre><code id="cfg-1" class="language-lua" style="background-color:inherit">return {
     window_width = 800,
     window_height = 500,
     window_title = "my game",
@@ -956,6 +1033,42 @@ declare namespace lyte {
     function set_shader_uniform(shader: lyte.Shader, uniform_name: string, uniform_value: lyte.ShaderUniformValue): void
     // Reset the specified uniform. 
     function reset_shader_uniform(shader: lyte.Shader, uniform_name: string): void
+    // Cleanup the physics world (dynamics + collision). 
+    function cleanup_world(world: lyte.World): void
+    // Create a new physics world 
+    function new_world(): lyte.World
+    // Update the physics world (dynamics + collision). 
+    function update_world(world: lyte.World, step_size: number): void
+    // Update the physics world gravity. 
+    function set_world_gravity(world: lyte.World, x: number, y: number): void
+    // Cleanup the physics collider. 
+    function cleanup_collider(collider: lyte.Collider): void
+    // Refresh the physics collider position (x, y) and angle 
+    function refresh_collider(collider: lyte.Collider): void
+    // Create new circle collider (body + geom) in the given physics world. 
+    function new_circle_collider(world: lyte.World, radius: number, x: number, y: number, angle: number): void
+    // Create new rectangle collider (body + geom) in the given physics world. 
+    function new_rect_collider(world: lyte.World, width: number, height: number, x: number, y: number, angle: number): void
+    // Set collider position. 
+    function set_collider_position(collider: lyte.Collider, x: number, y: number): void
+    // Set collider rotation. 
+    function set_collider_rotation(collider: lyte.Collider, angle: number): void
+    // Add force to collider. 
+    function add_force_to_collider(collider: lyte.Collider, fx: number, fy: number): void
+    // Add torque to collider. 
+    function add_torque_to_collider(collider: lyte.Collider, fz: number): void
+    // Set the collider's linear velocity 
+    function set_collider_linear_velocity(collider: lyte.Collider, vx: number, vy: number): void
+    // Set the collider's angular velocity 
+    function set_collider_angular_velocity(collider: lyte.Collider, vz: number): void
+    // Set the collider as 'kinematic'. By default, it's not kinematic. 
+    function set_collider_kinematic(collider: lyte.Collider, val: boolean): void
+    // Is the collider set as 'kinematic'? By default, it's not. 
+    function is_collider_kinematic(collider: lyte.Collider): boolean
+    // Get the number of collisions in the current frame 
+    function get_collider_collision_count(collider: lyte.Collider): number
+    // Get the collision data in the current frame as a list 
+    function get_collider_collisions(collider: lyte.Collider): lyte.CollisionList
 
     // records
 
@@ -1025,6 +1138,43 @@ declare namespace lyte {
         build: (shaderbuilder: lyte.ShaderBuilder) => lyte.Shader
         __gc: (shaderbuilder: lyte.ShaderBuilder) => void
     }
+    // Physics dynamics world + collision space. 
+    type World = {
+        update: (world: lyte.World, step_size: number) => void
+        set_gravity: (world: lyte.World, x: number, y: number) => void
+        new_circle_collider: (world: lyte.World, radius: number, x: number, y: number, angle: number) => void
+        new_rect_collider: (world: lyte.World, width: number, height: number, x: number, y: number, angle: number) => void
+        __gc: (world: lyte.World) => void
+    }
+    // Physics body + mass + colliding geometry. 
+    type Collider = {
+        x: number
+        y: number
+        angle: number
+        refresh: (collider: lyte.Collider) => void
+        set_position: (collider: lyte.Collider, x: number, y: number) => void
+        set_rotation: (collider: lyte.Collider, angle: number) => void
+        set_linear_velocity: (collider: lyte.Collider, vx: number, vy: number) => void
+        set_angular_velocity: (collider: lyte.Collider, vz: number) => void
+        add_force: (collider: lyte.Collider, fx: number, fy: number) => void
+        add_torque: (collider: lyte.Collider, fz: number) => void
+        is_kinematic: (collider: lyte.Collider) => boolean
+        set_kinematic: (collider: lyte.Collider, val: boolean) => void
+        get_collision_count: (collider: lyte.Collider) => number
+        get_collisions: (collider: lyte.Collider) => lyte.CollisionList
+        __gc: (collider: lyte.Collider) => void
+    }
+    // Collision information between two colliders 
+    type Collision = {
+        c1: lyte.Collider
+        c2: lyte.Collider
+        pos_x: number
+        pos_y: number
+        depth: number
+    }
+    // Physics joints (constraints). 
+    type Joint = {
+    }
 
     // variants (unions)
 
@@ -1038,6 +1188,8 @@ declare namespace lyte {
 
     // Float values
     type FloatVec4 = number[]
+    // Collision List
+    type CollisionList = object[]
 
     // dicts
 
