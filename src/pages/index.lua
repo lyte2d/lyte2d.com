@@ -23,19 +23,19 @@ return {
   }
 ]]
 
-local _examples = H.ul { id="examplesdropdown", class="dropdown-menu",
+local _examples = H.ul { id = "examplesdropdown", class = "dropdown-menu",
     H.li {
-        H.a {class="menulink", target="none", onclick="on_examplelink_click(event, 'empty')", href="about:blank",
-          H.div {style="display: none;", ""},
+        H.a { class = "menulink", target = "none", onclick = "on_examplelink_click(event, 'empty')", href = "about:blank",
+            H.div { style = "display: none;", "" },
             "(None)"
         }
     }
 }
 
 for _, v in ipairs(Data.examples) do
-    local l = H.li { id=v.app,
-        H.a {class="menulink", target="none", onclick="on_examplelink_click(event, '" .. v.app .. "')", href="about:blank",
-            H.div {style="display: none;", v.src},
+    local l = H.li { id = v.app,
+        H.a { class = "menulink", target = "none", onclick = "on_examplelink_click(event, '" .. v.app .. "')", href = "about:blank",
+            H.div { style = "display: none;", v.src },
             v.app,
         }
     }
@@ -44,61 +44,64 @@ end
 
 
 local function Page()
-    return Layout( "Home",
-        Section ("about",
-            H.div{class="title", "About"},
+    return Layout("Home",
+        Section("about",
+            H.div { class = "title", "About" },
             H.p [[ Lyte2D is a simple, lightweight, free and opensource Lua framework for writing games. ]],
             H.p [[ Lyte2D is inspired by LOVE2D.]],
             H.p [[ Hello world in Lyte2D: ]],
-            Code ({id="example-1", style="background-color:inherit"}, simple1),
+            Code({ id = "example-1", style = "background-color:inherit" }, simple1),
             H.script [[ Prism.highlightElement(document.getElementById("example-1")); ]],
-            H. p "Lyte2D is small (Windows and Linux binaries are each less than 2 MB zipped) and supports HTML5 by compiling into WASM.",
-            H.p {style="color: brown;", [[
+            H.p "Lyte2D is small (Windows and Linux binaries are each less than 2 MB zipped) and supports HTML5 by compiling into WASM.",
+            H.p { style = "color: brown;", [[
                 Lyte2D is currently "alpha" software.
                 Unless you know what you're doing, you probably shouldn't use it in "production."
                 But if you have some programming experience, especially with Lua you should be fine.
                 As such, it's ready to use for experimentation and "jam" style games.
-            ]]},
+            ]] },
             H.p "Lyte2D works on Windows, Linux (including SteamDeck) and HTML5.",
             H.b "Downloads",
             H.ul {
-                H.li {"Binaries", MenuLinkExt("https://github.com/lyte2d/lyte2d/releases","https://github.com/lyte2d/lyte2d/releases")},
-                H.li {"Source snapshot", MenuLinkExt("https://github.com/lyte2d/lyte2d", "https://github.com/lyte2d/lyte2d")},
+                H.li { "Binaries", MenuLinkExt("https://github.com/lyte2d/lyte2d/releases", "https://github.com/lyte2d/lyte2d/releases") },
+                H.li { "Source snapshot", MenuLinkExt("https://github.com/lyte2d/lyte2d", "https://github.com/lyte2d/lyte2d") },
             },
             H.p "Once you download the binary zip, just put lyte.exe somewhere in your path (or in a local directory where you'll write your game.)",
-            H.b "Some jam games made with Lyte2D",
+            H.b "Some games made with Lyte2D",
             H.ul {
                 H.li {
-                    H.b "Pong Out", " is on", MenuLinkExt("https://m04r.itch.io/pong-out","https://m04r.itch.io/pong-out"), " where you can play on your browser, download a binary or just download the sources",
+                    H.b "Sketchy Marathon (Demo)", " is on", MenuLinkExt("https://zorbn.itch.io/sketchy-marathon-demo", "https://zorbn.itch.io/sketchy-marathon-demo"), " where you can play on your browser, download a binary",
                 },
                 H.li {
-                    H.b "Omua War", " is on", MenuLinkExt("https://m04r.itch.io/omua-war","https://m04r.itch.io/omua-war"), " where you can play on your browser",
+                    H.b "Pong Out (Jam Game)", " is on", MenuLinkExt("https://m04r.itch.io/pong-out", "https://m04r.itch.io/pong-out"), " where you can play on your browser, download a binary or just download the sources",
+                },
+                H.li {
+                    H.b "Omua War (Jam Game)", " is on", MenuLinkExt("https://m04r.itch.io/omua-war", "https://m04r.itch.io/omua-war"), " where you can play on your browser",
                 },
                 -- H.li {H.b "Snek Head", "- TBD"},
             },
-        ""),
-        Section ("examples",
-            H.div {class="title", "Examples"},
+            ""),
+        Section("examples",
+            H.div { class = "title", "Examples" },
             H.p "Note: Both canvas and code areas are resizable. You can also open the canvas area in a full browser tab.",
-            H.div { class="dropdown",
+            H.div { class = "dropdown",
                 H.div {
-                    H.button {class="dropdown-toggle", type="button", id="dropdownMenuButton", onclick="toggleDropdownMenu()", "Examples ▼"},
-                    H.span {id="examplename"},
-                    H.a {id="examplenewlink", target="_blank", class="menulink", href="" },
+                    H.button { class = "dropdown-toggle", type = "button", id = "dropdownMenuButton", onclick = "toggleDropdownMenu()", "Examples ▼" },
+                    H.span { id = "examplename" },
+                    H.a { id = "examplenewlink", target = "_blank", class = "menulink", href = "" },
                 },
                 _examples,
             },
-            H.div {class="resizer ugly",
-                H.iframe {id="demosiframe", title="demos", name="demos", class="resized lyte-iframe"},
+            H.div { class = "resizer ugly",
+                H.iframe { id = "demosiframe", title = "demos", name = "demos", class = "resized lyte-iframe" },
             },
-            H.div {class="resizer2 ugly",
-                H.div {class="resized source-area",
-                    H.pre {H.code {id="examplecode", class="language-lua"}},
+            H.div { class = "resizer2 ugly",
+                H.div { class = "resized source-area",
+                    H.pre { H.code { id = "examplecode", class = "language-lua" } },
                 },
             },
-        ""),
-        Section ("guide",
-            H.div {class="title", "User guide"},
+            ""),
+        Section("guide",
+            H.div { class = "title", "User guide" },
             H.p "",
             H.b "Get started",
             H.p "Download the executable and place it somewhere in your path. 'lyte.exe' (or 'lyte' on linux) is assumed to be in your path.",
@@ -109,7 +112,7 @@ local function Page()
                 H.li "Start your game with <code>lyte</code>.",
             },
             H.b "Want to run some code in another location?",
-            H.ul{
+            H.ul {
                 H.li "If you want to use another directory as the base, you can do <code>lyte dir=../my_games/testgame</code> ",
                 H.li "If you want to use another file as your 'main' file, you can do <code>lyte app=myapp</code>, assuming you have 'myapp.lua' in the current directory. You should NOT specify the extension",
                 H.li "<code>dir=...</code> and <code>app=...</code> arguments can be combined to run a file in an arbitrary directory",
@@ -133,7 +136,7 @@ local function Page()
             H.b "Configuring your app.",
             H.ul {
                 H.li "If you'd like to configure your window size, fullscreen, etc. before the app loads, you can create a 'config.lua' file next to your 'app.lua'. Here's an example config.lua file: ",
-                Code ({id="cfg-1", style="background-color:inherit"}, cfg1),
+                Code({ id = "cfg-1", style = "background-color:inherit" }, cfg1),
                 H.script [[ Prism.highlightElement(document.getElementById("cfg-1")); ]],
                 H.li "Note: you need to keep this file next to the zip or exe file if you fuse your app",
             },
@@ -163,11 +166,11 @@ local function Page()
                 H.li "Missing features (coming up in later releases): physics, networking, native UI etc.",
             }
         ),
-        Section ("api",
-            H.div {class="title", "API"},
+        Section("api",
+            H.div { class = "title", "API" },
             H.p "Note: some of the experimental APIs are not documented.",
-            H.div {class="api-scroller",
-                Code ({id="code-api", style="background-color:inherit"}, Data.apitxt, "language-typescript"),
+            H.div { class = "api-scroller",
+                Code({ id = "code-api", style = "background-color:inherit" }, Data.apitxt, "language-typescript"),
                 H.script [[ Prism.highlightElement(document.getElementById("code-api")); ]]
             }
         ),
@@ -206,7 +209,6 @@ local function Page()
 
         ]]
     )
-
 end
 
 print(Page())
