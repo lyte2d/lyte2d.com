@@ -66,6 +66,10 @@ local function Page()
                 H.li { "Source snapshot", MenuLinkExt("https://github.com/lyte2d/lyte2d", "https://github.com/lyte2d/lyte2d") },
             },
             H.p "Once you download the binary zip, just put lyte.exe somewhere in your path (or in a local directory where you'll write your game.)",
+            ""),
+        Section("games",
+            H.div { class = "title", "Games" },
+            H.p "",
             H.b "Some games made with Lyte2D",
             H.ul {
                 H.li {
